@@ -40,6 +40,7 @@ var appState = {
    score: 0,
    currentQuestionIndex: null,
    answerArray: []
+   
     // Answers
     // User's answer choice(s)	
     // Message(s) to let them know they have the correct answer	
@@ -73,9 +74,14 @@ function submitAnswer(state, userInput) {
   	// if on last question, show results page after clicking next
   	if(state.currentQuestionIndex === null) {
   		state.currentQuestionIndex = 0;
+  		return true;
   	}
-   	else {
+   	else if(state.currentQuestionIndex === state.questions.length-1) {
+  		return false;
+  	}
+  	else {
   		state.currentQuestionIndex++;
+  		return true;
   	}
 }
 
