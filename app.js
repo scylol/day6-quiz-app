@@ -4,41 +4,36 @@ var appState = {
    		{ 
    			question: "question1",
    			choices: ['bob','2', '3', '4'],
-   			correctAnswer: 0,
-        goodFeedback: 'Correct',
-        badFeedback: 'Incorrect, the correct answer was bob'
+   			correctAnswer: 	'bob',
+        	giveFeedback: 0
    		},
       
       { 
         question: "question2",
         choices: ['bob','2', '3', '4'],
         correctAnswer: 1,
-        goodFeedback: 'Correct',
-        badFeedback: 'Incorrect, the correct answer was 2'
+       giveFeedback: 0
       },
 
       { 
         question: "question3",
         choices: ['bob','2', '3', '4'],
         correctAnswer: 2,
-        goodFeedback: 'Correct',
-        badFeedback: 'Incorrect, the correct answer was 3'
+        giveFeedback: 0
       },
       
       { 
         question: "question4",
         choices: ['bob','2', '3', '4'],
         correctAnswer: 3,
-        goodFeedback: 'Correct',
-        badFeedback: 'Incorrect, the correct answer was 4'
+        giveFeedback: 0
       },
       
       { 
         question: "question5",
         choices: ['bob','2', '3', '4'],
         correctAnswer: 4,
-        goodFeedback: 'Correct',
-        badFeedback: 'Incorrect, the correct answer was bob'
+        giveFeedback: 0
       }
 
    ],
@@ -56,17 +51,35 @@ var appState = {
 
 // State manipulation functions...
 // function to check user answer (if statement display fb)
-function submitAnswer(appState, userInput) {
-	const currentQuestion = appState.questions[state.currentQuestionIndex];
+function submitAnswer(state, userInput) {
+	const currentQuestion = state.questions[state.currentQuestionIndex];
+	
 	state.answerArray.push(userInput);
-  
-  }
+	if (state.answerArray[state.currentQuestionIndex] === currentQuestion.correctAnswer) {
+		currentQuestion.giveFeedback = 1;
+		state.score++;
+	} else {
+		currentQuestion.giveFeedback = 2;
 
-  function NextQuestion(appState) {
-  	
-  }
+	}
 
-// State manipulation functions...
+	
+
+
+}
+
+  function nextQuestion(state) {
+  	//incrementing currentQuestionIndex
+  	// if on last question, show results page after clicking next
+  	if(state.currentQuestionIndex === null) {
+  		state.currentQuestionIndex = 0;
+  	}
+   	else {
+  		state.currentQuestionIndex++;
+  	}
+}
+
+
 // Render functions...
 
 // Event handlers
