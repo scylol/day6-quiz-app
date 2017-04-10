@@ -42,7 +42,9 @@ var appState = {
       }
 
    ],
-   score: 0
+   score: 0,
+   currentQuestionIndex: null,
+   answerArray: []
     // Answers
     // User's answer choice(s)	
     // Message(s) to let them know they have the correct answer	
@@ -50,17 +52,18 @@ var appState = {
     // Other things like score? Anything else?
 };
 
-console.log(appState.quiz[0].question);
+
 
 // State manipulation functions...
 // function to check user answer (if statement display fb)
-function checkAnswer(appState, userInput, currentQuestion) {
-  if (userInput === appState.questions[currentQuestion].correctAnswer){
-    appState.questions[currentQuestion].goodFeedback;
-    score++;
+function submitAnswer(appState, userInput) {
+	const currentQuestion = appState.questions[state.currentQuestionIndex];
+	state.answerArray.push(userInput);
+  
   }
-  else {
-    appState.questions[currentQuestion].badFeedback;
+
+  function NextQuestion(appState) {
+  	
   }
 
 // State manipulation functions...
