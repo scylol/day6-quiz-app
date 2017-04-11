@@ -11,34 +11,34 @@ var appState = {
       { 
         question: "question2",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 1,
+        correctAnswer: 'bob',
         giveFeedback: 0
       },
 
       { 
         question: "question3",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 2,
+        correctAnswer: 'bob',
         giveFeedback: 0
       },
       
       { 
         question: "question4",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 3,
+        correctAnswer: 'bob',
         giveFeedback: 0
       },
       
       { 
         question: "question5",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 4,
+        correctAnswer: 'bob',
         giveFeedback: 0
       }
 
    ],
    score: 0,
-   currentQuestionIndex: 1,
+   currentQuestionIndex: null,
    answerArray: []
    
     // Answers
@@ -79,14 +79,6 @@ function submitAnswer(state, userInput) {
   	}
 }
 
-// Render functions...
-// var renderList = function(state, element) {
-//     var itemsHTML = state.items.map(function(item) {
-//         return '<li>' + item + '</li>';
-//     });
-//     element.html(itemsHTML);
-// };
-
 function loadQuestion(state, element) {
 // call nextquestion
 // make sure question was answered before
@@ -94,58 +86,70 @@ function loadQuestion(state, element) {
 // // if last question results html ?
 // forEach
 // let quizHTML = state.questions.map(function(question) {
-  let choiceValue = state.questions[state.currentQuestionIndex].choices;
-  let quizHTML =
+  let questionIndex = state.questions[state.currentQuestionIndex];
+  let quizHTML;
   if(state.currentQuestionIndex === null) {
-    return `<section class='main-container'>
+    quizHTML = `<section class='main-container'>
     <h1>Quiz</h1>
     <p>Let's take a quiz!</p>
     <button class='start-button' type='button'>Start</button>`
   }
-  else if(state.currentQuestionIndex < state.questions.length) {
-    return `<form id='quiz-form'>
-    <p class='question'>${state.questions[state.currentQuestionIndex].question}</p>
-    <label class='option'><input type="radio" name="option" value='0'><span id='option0'>${choiceValue[0]}</span></label>
-    <label class='option'><input type="radio" name="option" value='1'><span id='option1'>${choiceValue[1]}</span></label>
-    <label class='option'><input type="radio" name="option" value='2'><span id='option2'>${choiceValue[2]}</span></label>
-    <label class='option'><input type="radio" name="option" value='3'><span id='option3'>${choiceValue[3]}</span></label>
+  else if(state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 0) {
+    quizHTML = `<form id='quiz-form'> 
+    <p class='question'>${state.currentQuestionIndex+1}/${state.questions.length}: ${questionIndex.question}</p>
+    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[0]}><span id='option0'>${questionIndex.choices[0]}</span></label>
+    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[1]}><span id='option1'>${questionIndex.choices[1]}</span></label>
+    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[2]}><span id='option2'>${questionIndex.choices[2]}</span></label>
+    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[3]}><span id='option3'>${questionIndex.choices[3]}</span></label>
     </form>
-    <button class='submit-answer' type='button'>Submit answer</button>
-    <button class='next-question' type='button'>Next question</button>`;
+    <button class='submit-answer' type='button'>Submit answer</button>`
     // <button class='hidden'>
   }
+  else if (state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 1) {
+    quizHTML = `<p>Correct! You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
+    <button class='next-question' type='button'>Next question</button>`
+  }
+  else if (state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 2) {
+    quizHTML = `<p>Wrong! The correct answer is ${questionIndex.correctAnswer}. You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
+    <button class='next-question' type='button'>Next question</button>`
+  }
   else {
-    return `<section class='results'>
+    quizHTML = `<section class='results'>
     <p class ='your-score'>You scored ${state.score} out of ${state.questions.length} correct!</p>
     <button class='start-over' type='button'>Start Over</button>
-    </section>`
+    </section>`;
   }
 
-
-    $(element).html(quizHTML);
+  $(element).html(quizHTML);
 }
 
 
- //non skippable
-
-
+//non skippable
 // Event handlers
+$(function(){
+  // When start button is submitted
+  loadQuestion(appState, $('.main-container'));
 
-// When start button is submitted
-$('.main-container').on('click', '.start-button',function(event) {
-  
+  $('.main-container').on('click', '.start-button',function(event) {
+    nextQuestion(appState);
+    loadQuestion(appState, $('.main-container'));  
+  });
 
-  
-});
+  // Current answer is submitted
+  $('.main-container').on('click','.submit-answer',function(event) {
+    var selectedOption = $('input[type=radio]:checked');
+    var answer = selectedOption.val();
+    console.log(answer);
+    nextQuestion(appState);
+    submitAnswer(appState, answer);
+    loadQuestion(appState, $('.main-container')); 
+  });
 
-// Current answer is submitted
-$('.main-container').on('click','.submit-answer',function(event) {
-});
+  // Next question
+  $('.main-container').on('click','.next-question',function(event) {
+  });
 
-// Next question
-$('.main-container').on('click','.next-question',function(event) {
-});
-
-// Restart button is clicked
-$('.results').on('click', '.start-over',function(event) {
+  // Restart button is clicked
+  $('.results').on('click', '.start-over',function(event) {
+  });
 });
