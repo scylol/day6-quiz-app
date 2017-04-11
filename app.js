@@ -11,28 +11,28 @@ var appState = {
       { 
         question: "question2",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 'bob',
+        correctAnswer: 0,
         giveFeedback: 0
       },
 
       { 
         question: "question3",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 'bob',
+        correctAnswer: 0,
         giveFeedback: 0
       },
       
       { 
         question: "question4",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 'bob',
+        correctAnswer: 0,
         giveFeedback: 0
       },
       
       { 
         question: "question5",
         choices: ['bob','2', '3', '4'],
-        correctAnswer: 'bob',
+        correctAnswer: 0,
         giveFeedback: 0
       }
 
@@ -40,12 +40,6 @@ var appState = {
    score: 0,
    currentQuestionIndex: null,
    answerArray: []
-   
-    // Answers
-    // User's answer choice(s)	
-    // Message(s) to let them know they have the correct answer	
-    // Message(s) when they don't have the correct answer
-    // Other things like score? Anything else?
 };
 
 
@@ -60,13 +54,7 @@ function submitAnswer(state, userInput) {
   console.log(state.currentQuestionIndex);
   console.log(state.answerArray[state.currentQuestionIndex]);
   console.log(currentQuestion.correctAnswer);
-	if (state.answerArray[state.currentQuestionIndex] === currentQuestion.correctAnswer) {
-    console.log("Inside the If statement");
-		currentQuestion.giveFeedback = 1;
-		state.score++;
-	} else {
-		currentQuestion.giveFeedback = 2;
-	}
+	
 }
 
   function nextQuestion(state) {
@@ -74,15 +62,26 @@ function submitAnswer(state, userInput) {
   	// if on last question, show results page after clicking next
   	if(state.currentQuestionIndex === null) {
   		state.currentQuestionIndex = 0;
-  		return true;
+  		// return true;
   	}
-   	else if(state.currentQuestionIndex === state.questions.length-1) {
-  		return false;
-  	}
+   	// else if(state.currentQuestionIndex === state.questions.length-1) {
+  		// return false;
+  	//}
   	else {
   		state.currentQuestionIndex++;
-  		return true;
+  		// return true;
   	}
+}
+
+function getFeedback(state) {
+  const currentQuestion = state.questions[state.currentQuestionIndex];
+  if (state.answerArray[state.currentQuestionIndex] === currentQuestion.correctAnswer) {
+    console.log("Inside the If statement");
+    currentQuestion.giveFeedback = 1;
+    state.score++;
+  } else {
+    currentQuestion.giveFeedback = 2;
+  }
 }
 
 function loadQuestion(state, element) {
@@ -95,8 +94,7 @@ function loadQuestion(state, element) {
   let questionIndex = state.questions[state.currentQuestionIndex];
   let quizHTML;
   if(state.currentQuestionIndex === null) {
-    quizHTML = `<section class='main-container'>
-    <h1>Quiz</h1>
+    quizHTML = `<h1>Quiz</h1>
     <p>Let's take a quiz!</p>
     <button class='start-button' type='button'>Start</button>`
   }
@@ -123,7 +121,7 @@ function loadQuestion(state, element) {
     quizHTML = `<section class='results'>
     <p class ='your-score'>You scored ${state.score} out of ${state.questions.length} correct!</p>
     <button class='start-over' type='button'>Start Over</button>
-    </section>`;
+    </section>`
   }
 
   $(element).html(quizHTML);
@@ -147,18 +145,36 @@ $(function(){
     var answer = parseInt(selectedOption.val());
     // console.log(`Answer: ${answer}`);
     submitAnswer(appState, answer);
+    getFeedback(appState);
     loadQuestion(appState, $('.main-container'));
-    nextQuestion(appState);
-
+    //nextQuestion(appState);
+    
     // console.log(` AnswerArray = ${appState.answerArray}`);
     // console.log(` Feedback = ${appState.questions[0].giveFeedback}`);
   });
-
-  // Next question
+  // next question
   $('.main-container').on('click','.next-question',function(event) {
+    var selectedOption = $('input[type=radio]:checked');
+    var answer = parseInt(selectedOption.val()); 
+    //getFeedback(appState);
+    nextQuestion(appState);
+    loadQuestion(appState, $('.main-container'));
+    
+    //submitAnswer(appState, answer);
   });
 
   // Restart button is clicked
-  $('.results').on('click', '.start-over',function(event) {
+  $('.main-container').on('click', '.start-over',function(event) {
+    appState.currentQuestionIndex = null;
+    appState.score = 0;
+    appState.answerArray=[];
+    appState.questions[0].giveFeedback = 0;
+    appState.questions[1].giveFeedback = 0;
+    appState.questions[2].giveFeedback = 0;
+    appState.questions[3].giveFeedback = 0;
+    
+    loadQuestion(appState, $('.main-container'));  
+    nextQuestion(appState);
+    loadQuestion(appState, $('.main-container'));  
   });
 });
