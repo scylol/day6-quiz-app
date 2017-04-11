@@ -4,7 +4,7 @@ var appState = {
    		{ 
    			question: "question1",
    			choices: ['bob','2', '3', '4'],
-   			correctAnswer: 	'bob',
+   			correctAnswer: 	0,
         giveFeedback: 0
    		},
       
@@ -55,7 +55,13 @@ function submitAnswer(state, userInput) {
 	const currentQuestion = state.questions[state.currentQuestionIndex];
 	
 	state.answerArray.push(userInput);
+  console.log(state.answerArray);
+  console.log('outside the if statement');
+  console.log(state.currentQuestionIndex);
+  console.log(state.answerArray[state.currentQuestionIndex]);
+  console.log(currentQuestion.correctAnswer);
 	if (state.answerArray[state.currentQuestionIndex] === currentQuestion.correctAnswer) {
+    console.log("Inside the If statement");
 		currentQuestion.giveFeedback = 1;
 		state.score++;
 	} else {
@@ -97,10 +103,10 @@ function loadQuestion(state, element) {
   else if(state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 0) {
     quizHTML = `<form id='quiz-form'> 
     <p class='question'>${state.currentQuestionIndex+1}/${state.questions.length}: ${questionIndex.question}</p>
-    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[0]}><span id='option0'>${questionIndex.choices[0]}</span></label>
-    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[1]}><span id='option1'>${questionIndex.choices[1]}</span></label>
-    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[2]}><span id='option2'>${questionIndex.choices[2]}</span></label>
-    <label class='option'><input type="radio" name="option" value=${questionIndex.choices[3]}><span id='option3'>${questionIndex.choices[3]}</span></label>
+    <label class='option'><input type="radio" name="option" value='0'><span id='option0'>${questionIndex.choices[0]}</span></label>
+    <label class='option'><input type="radio" name="option" value='1'><span id='option1'>${questionIndex.choices[1]}</span></label>
+    <label class='option'><input type="radio" name="option" value='2'><span id='option2'>${questionIndex.choices[2]}</span></label>
+    <label class='option'><input type="radio" name="option" value='3'><span id='option3'>${questionIndex.choices[3]}</span></label>
     </form>
     <button class='submit-answer' type='button'>Submit answer</button>`
     // <button class='hidden'>
@@ -110,7 +116,7 @@ function loadQuestion(state, element) {
     <button class='next-question' type='button'>Next question</button>`
   }
   else if (state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 2) {
-    quizHTML = `<p>Wrong! The correct answer is ${questionIndex.correctAnswer}. You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
+    quizHTML = `<p>Wrong! The correct answer is ${questionIndex.choices[questionIndex.correctAnswer]}. You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
     <button class='next-question' type='button'>Next question</button>`
   }
   else {
@@ -138,11 +144,14 @@ $(function(){
   // Current answer is submitted
   $('.main-container').on('click','.submit-answer',function(event) {
     var selectedOption = $('input[type=radio]:checked');
-    var answer = selectedOption.val();
-    console.log(answer);
-    nextQuestion(appState);
+    var answer = parseInt(selectedOption.val());
+    // console.log(`Answer: ${answer}`);
     submitAnswer(appState, answer);
-    loadQuestion(appState, $('.main-container')); 
+    loadQuestion(appState, $('.main-container'));
+    nextQuestion(appState);
+
+    // console.log(` AnswerArray = ${appState.answerArray}`);
+    // console.log(` Feedback = ${appState.questions[0].giveFeedback}`);
   });
 
   // Next question
