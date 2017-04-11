@@ -1,0 +1,44 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+}
+
+.main-container {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+h1, p {
+	text-align: center;
+}
+
+.option {
+	display: block;
+}
+
+button {
+	display:block;
+	width:50%;
+    margin: 15px auto;
+    background-color: coral;
+}
+
+input {
+    margin-right: 5px;
+}
+
+label {
+    padding-left: 75px;
+}
+
+.question {
+	padding-top: 50px;
+}
+
+.your-score, .feedback {
+	padding-top: 50px;
+}
+
+.error-text {
+	font-weight: bold;
+}
