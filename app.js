@@ -93,37 +93,59 @@ function loadQuestion(state, element) {
 // call submitanswer --> if statement gives fb + score, which put into html
 // // if last question results html ?
 // forEach
-  // let quizHTML = state.questions.map(function(question) {
-    let choiceValue = state.questions[state.currentQuestionIndex].choices;
-    let quizHTML =
-         `<form id='quiz-form'>
-            <p class='question'>${state.questions[state.currentQuestionIndex].question}</p>
-            <label class='option'><input type="radio" name="option" value='0'><span id='option 0'>${choiceValue[0]}</span></label>
-            <label class='option'><input type="radio" name="option" value='1'><span id='option 1'>${choiceValue[1]}</span></label>
-            <label class='option'><input type="radio" name="option" value='2'><span id='option 2'>${choiceValue[2]}</span></label>
-            <label class='option'><input type="radio" name="option" value='3'><span id='option 3'>${choiceValue[3]}</span></label>
-          </form>
-          <button type='submit'>Submit answer</button>
-          <button type='button'>Next question</button>`;
-  $(element).html(quizHTML);
+// let quizHTML = state.questions.map(function(question) {
+  let choiceValue = state.questions[state.currentQuestionIndex].choices;
+  let quizHTML =
+  if(state.currentQuestionIndex === null) {
+    return `<section class='main-container'>
+    <h1>Quiz</h1>
+    <p>Let's take a quiz!</p>
+    <button class='start-button' type='button'>Start</button>`
+  }
+  else if(state.currentQuestionIndex < state.questions.length) {
+    return `<form id='quiz-form'>
+    <p class='question'>${state.questions[state.currentQuestionIndex].question}</p>
+    <label class='option'><input type="radio" name="option" value='0'><span id='option0'>${choiceValue[0]}</span></label>
+    <label class='option'><input type="radio" name="option" value='1'><span id='option1'>${choiceValue[1]}</span></label>
+    <label class='option'><input type="radio" name="option" value='2'><span id='option2'>${choiceValue[2]}</span></label>
+    <label class='option'><input type="radio" name="option" value='3'><span id='option3'>${choiceValue[3]}</span></label>
+    </form>
+    <button class='submit-answer' type='button'>Submit answer</button>
+    <button class='next-question' type='button'>Next question</button>`;
+    // <button class='hidden'>
+  }
+  else {
+    return `<section class='results'>
+    <p class ='your-score'>You scored ${state.score} out of ${state.questions.length} correct!</p>
+    <button class='start-over' type='button'>Start Over</button>
+    </section>`
+  }
+
+
+    $(element).html(quizHTML);
 }
 
+
+ //non skippable
 
 
 // Event handlers
 
 // When start button is submitted
-$('.start').submit(function(event) {
+$('.main-container').on('click', '.start-button',function(event) {
+  
+
+  
 });
 
 // Current answer is submitted
-$('.answer').submit(function(event) {
+$('.main-container').on('click','.submit-answer',function(event) {
 });
 
 // Next question
-$('.next').click(function(event) {
+$('.main-container').on('click','.next-question',function(event) {
 });
 
 // Restart button is clicked
-$('.restart').click(function(event) {
+$('.results').on('click', '.start-over',function(event) {
 });
