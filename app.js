@@ -5,6 +5,7 @@ var appState = {
       question: "Who is Pharah's mother?",
       choices: ["Mercy","Ana","Torbjorn","Diva"],
       correctAnswer: 1,
+      // Feedback changes to 1 for correct, changes to 2 for incorrect
       giveFeedback: 0
     },
 
@@ -12,6 +13,7 @@ var appState = {
       question: "Which of these characters is not a support?",
       choices: ["Tracer","Lucio","Symmetra","Mercy"],
       correctAnswer: 0,
+      // Feedback changes to 1 for correct, changes to 2 for incorrect
       giveFeedback: 0
     },
 
@@ -19,6 +21,7 @@ var appState = {
       question: "What is the name of Reinhardt's ultimate ability?",
       choices: ["Rip-tire","Sound-barrier","Pulse Bomb","Earthshatter"],
       correctAnswer: 3,
+      // Feedback changes to 1 for correct, changes to 2 for incorrect
       giveFeedback: 0
     },
 
@@ -26,6 +29,7 @@ var appState = {
       question: "Who is the brother of Genji?",
       choices: ["Soldier76","Hanzo","Roadhog","Bastion"],
       correctAnswer: 1,
+      // Feedback changes to 1 for correct, changes to 2 for incorrect
       giveFeedback: 0
     },
 
@@ -33,6 +37,7 @@ var appState = {
       question: "Which of these heroes has no soul?",
       choices: ["Reaper","Mei","Junkrat","Zarya"],
       correctAnswer: 1,
+      // Feedback changes to 1 for correct, changes to 2 for incorrect
       giveFeedback: 0
     }
 
@@ -92,6 +97,16 @@ function loadQuestion(state, element) {
     </section>`
 
   }
+  else if(state.currentQuestionIndex === state.questions.length-1 && questionIndex.giveFeedback === 1) {
+        quizHTML = `<section class="quiz"><p class='feedback'>Correct! You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
+    <button class='next-question' type='button'>Show Results!</button>
+    </section>` 
+  }
+  else if(state.currentQuestionIndex === state.questions.length-1 && questionIndex.giveFeedback === 2) {
+        quizHTML = `<section class="quiz"><p class='feedback'>Wrong! The correct answer is ${questionIndex.choices[questionIndex.correctAnswer]}. You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
+    <button class='next-question' type='button'>Show Results</button>
+    </section>` 
+  }
   else if (state.currentQuestionIndex < state.questions.length && questionIndex.giveFeedback === 1) {
     quizHTML = `<section class="quiz"><p class='feedback'>Correct! You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
     <button class='next-question' type='button'>Next question</button>
@@ -101,6 +116,7 @@ function loadQuestion(state, element) {
     quizHTML = `<section class="quiz"><p class='feedback'>Wrong! The correct answer is ${questionIndex.choices[questionIndex.correctAnswer]}. You have anwered ${state.score} out of ${state.questions.length} correct so far!</p>
     <button class='next-question' type='button'>Next question</button>
     </section>`
+
   }
   else {
     quizHTML = `<section class="quiz">
@@ -124,8 +140,8 @@ $(function(){
   });
   // Current answer is submitted
   $('.main-container').on('click','.submit-answer',function(event) {
-    var selectedOption = $('input[type=radio]:checked');
-    var answer = parseInt(selectedOption.val());
+    let selectedOption = $('input[type=radio]:checked');
+    let answer = parseInt(selectedOption.val());
   if(selectedOption.length === 0) {
     $('.error-text').text("Please select an answer!!!");
   }
@@ -138,8 +154,8 @@ $(function(){
 });
   // next question
   $('.main-container').on('click','.next-question',function(event) {
-    var selectedOption = $('input[type=radio]:checked');
-    var answer = parseInt(selectedOption.val()); 
+    let selectedOption = $('input[type=radio]:checked');
+    let answer = parseInt(selectedOption.val()); 
 
     nextQuestion(appState);
     loadQuestion(appState, $('.main-container'));
@@ -149,11 +165,11 @@ $(function(){
     appState.currentQuestionIndex = null;
     appState.score = 0;
     appState.answerArray=[];
-    appState.questions[0].giveFeedback = 0;
-    appState.questions[1].giveFeedback = 0;
-    appState.questions[2].giveFeedback = 0;
-    appState.questions[3].giveFeedback = 0;
-
+    
+    appState.questions.forEach(function(val){
+      val.giveFeedback = 0;
+    });
+    
     loadQuestion(appState, $('.main-container'));  
     nextQuestion(appState);
     loadQuestion(appState, $('.main-container'));  
